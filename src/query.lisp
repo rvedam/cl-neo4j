@@ -1,4 +1,7 @@
-(in-package #:cl-neo4j)
+(in-package #:cl-neo4j.utils)
+
+(defclass cypher-transaction ()
+  ((statements :initarg :statements :accessor statements :initform '())))
 
 (defclass cypher-query ()
   ((statement :accessor statement :initform "" :initarg :statement)

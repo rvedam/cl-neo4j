@@ -4,3 +4,4 @@
   (run! 'cl-neo4j))
 
 (def-suite cl-neo4j)
+(def-suite cl-neo4j-transaction)

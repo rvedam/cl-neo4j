@@ -10,7 +10,7 @@
     (is (equal node-id
                (get-id-from-data (cl-neo4j:get-node :node-id node-id))))
     (is (cl-neo4j:delete-node :node-id node-id))
-    (signals (cl-neo4j:node-not-found-error)
+    (signals (cl-neo4j.utils:node-not-found-error)
       (cl-neo4j:delete-node :node-id node-id))))
 
 (test get-node
@@ -18,7 +18,7 @@
     (is (equal (get-id-from-data (cl-neo4j:get-node :node-id a))
                a))
     (cl-neo4j:delete-node :node-id b)
-    (signals (cl-neo4j:node-not-found-error)
+    (signals (cl-neo4j.utils:node-not-found-error)
       (cl-neo4j:get-node :node-id b))))
 
 (test node-properties
@@ -31,7 +31,7 @@
                "test"))
     (is (cl-neo4j:del-node-properties :node-id a))
     (is (null (cl-neo4j:get-node-properties :node-id a)))
-    (signals (cl-neo4j:property-not-found-error)
+    (signals (cl-neo4j.utils:property-not-found-error)
       (cl-neo4j:get-node-property :node-id a :property :test))
     (is (cl-neo4j:set-node-property :node-id a
                                     :property :test
@@ -50,7 +50,7 @@
       (is (cdr (assoc :type (cl-neo4j:get-relationship :relationship-id r)))
           "test")
       (is (cl-neo4j:delete-relationship :relationship-id r))
-      (signals (cl-neo4j:relationship-not-found-error)
+      (signals (cl-neo4j.utils:relationship-not-found-error)
         (cl-neo4j:get-relationship :relationship-id r)))))
 
 (test get-relationship
@@ -59,7 +59,7 @@
                                   :relationship-id ab))
                ab))
     (cl-neo4j:delete-relationship :relationship-id ba)
-    (signals (cl-neo4j:relationship-not-found-error)
+    (signals (cl-neo4j.utils:relationship-not-found-error)
       (cl-neo4j:get-relationship :relationship-id ba))))
 
 (test relationship-properties
@@ -72,7 +72,7 @@
                "test"))
     (is (cl-neo4j:del-relationship-properties :relationship-id ab))
     (is (null (cl-neo4j:get-relationship-properties :relationship-id ab)))
-    (signals (cl-neo4j:property-not-found-error)
+    (signals (cl-neo4j.utils:property-not-found-error)
       (cl-neo4j:get-relationship-property :relationship-id ab :property :test))
     (is (cl-neo4j:set-relationship-property :relationship-id ab
                                     :property :test
@@ -103,7 +103,7 @@
   (with-test-nodes (a b) ()
     (is (cl-neo4j:create-index :name "i1"))
     (is (cl-neo4j:delete-index :name "i1"))
-    (signals (cl-neo4j:index-not-found-error)
+    (signals (cl-neo4j.utils:index-not-found-error)
       (cl-neo4j:delete-index :name "i1"))
     (is (cl-neo4j:create-index :name "i1"))
     (is (cl-neo4j:add-to-index :name "i1"

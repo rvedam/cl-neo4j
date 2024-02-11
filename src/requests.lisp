@@ -1,6 +1,6 @@
 ;;; Neo4j requests and request handlers for them. Also database stuff is handled here.
 
-(in-package :cl-neo4j)
+(in-package :cl-neo4j.utils)
 
 (defmacro with-neo4j-database ((host port user pass) &rest body)
   `(let ((*neo4j-host* ,host)
@@ -58,16 +58,19 @@
   ((host :initarg :host :accessor handler-host)
    (port :initarg :port :accessor handler-port)
    (user :initarg :user :accessor handler-user)
-   (pass :initarg :pass :accessor handler-pass))
+   (pass :initarg :pass :accessor handler-pass)
+   (database :initarg :db-name :accessor handler-db))
   (:documentation "Basic handler that just sends request to the database."))
 
 (defun basic-handler (&key (host *neo4j-host*) (port *neo4j-port*)
-                        (user *neo4j-user*) (pass *neo4j-pass*))
+                        (user *neo4j-user*) (pass *neo4j-pass*)
+                        (db *neo4j-database*))
   (make-instance 'basic-handler
                  :host host
                  :port port
                  :user user
-                 :pass pass))
+                 :pass pass
+                 :db-name db))
 
 (defmethod send-request ((handler basic-handler) request)
   (with-accessors ((method request-method) (uri request-uri) (payload request-payload))
@@ -75,7 +78,8 @@
     (multiple-value-bind (body status)
         (http-request (format-neo4j-query (handler-host handler)
                                           (handler-port handler)
-                                          uri)
+                                          uri
+                                          :db-postfix (format nil "db/~A/" (handler-db handler)))
                       :method method
                       :basic-authorization (list (handler-user handler)
                                                  (handler-pass handler))

@@ -81,15 +81,15 @@
                          property)))
   (:status-handlers
    (204 (values t body))
-   (404 (error 'node-not-found-error :uri uri))
-   (409 (error 'unable-to-delete-node-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:node-not-found-error :uri uri))
+   (409 (error 'cl-neo4j.utils:unable-to-delete-node-error :uri uri))))
 
 (def-neo4j-fun get-relationship (relationship-id)
   :get
   (:uri-spec (format nil "relationship/~A" relationship-id))
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun create-relationship (node-id to-node-id relationship-type properties)
   :post
@@ -97,15 +97,15 @@
   (:encode (list to-node-id relationship-type properties) :relationship)
   (:status-handlers
    (201 (decode-neo4j-json-output body))
-   (400 (error 'invalid-data-sent-error :uri uri :json json))
-   (404 (error 'node-not-found-error :uri uri))))
+   (400 (error 'cl-neo4j.utils:invalid-data-sent-error :uri uri :json json))
+   (404 (error 'cl-neo4j.utils:node-not-found-error :uri uri))))
 
 (def-neo4j-fun delete-relationship (relationship-id)
   :delete
   (:uri-spec (format nil "relationship/~A" relationship-id))
   (:status-handlers
    (204 (values t body))
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun set-relationship-properties (relationship-id properties)
   :put
@@ -113,8 +113,8 @@
   (:encode properties :string)
   (:status-handlers
    (204 (values t body))
-   (400 (error 'invalid-data-sent-error :uri uri :json json))
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (400 (error 'cl-neo4j.utils:invalid-data-sent-error :uri uri :json json))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun get-relationship-properties (relationship-id)
   :get
@@ -122,14 +122,14 @@
   (:status-handlers
    (200 (decode-neo4j-json-output body))
    (204 nil)
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun del-relationship-properties (relationship-id)
   :delete
   (:uri-spec (format nil "relationship/~A/properties" relationship-id))
   (:status-handlers
    (204 (values t body))
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun set-relationship-property (relationship-id property value)
   :put
@@ -141,8 +141,8 @@
   (:encode value :string)
   (:status-handlers
    (204 (values t body))
-   (400 (error 'invalid-data-sent-error :uri uri :json json))
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (400 (error 'cl-neo4j.utils:invalid-data-sent-error :uri uri :json json))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun get-relationship-property (relationship-id property)
   :get
@@ -153,8 +153,8 @@
                          property)))
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (400 (error 'invalid-data-sent-error :uri uri :json json))
-   (404 (error 'property-not-found-error :uri uri))))
+   (400 (error 'cl-neo4j.utils:invalid-data-sent-error :uri uri :json json))
+   (404 (error 'cl-neo4j.utils:property-not-found-error :uri uri))))
 
 (def-neo4j-fun del-relationship-property (relationship-id property)
   :delete
@@ -165,7 +165,7 @@
                          property)))
   (:status-handlers
    (204 (values t body))
-   (404 (error 'relationship-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:relationship-not-found-error :uri uri))))
 
 (def-neo4j-fun get-node-relationships (node-id direction types)
   :get
@@ -178,7 +178,7 @@
                      types))
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (404 (error 'node-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:node-not-found-error :uri uri))))
 
 (def-neo4j-fun get-relationships-types ()
   :get
@@ -192,7 +192,7 @@
   (:encode statements :statements)
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (404 (error 'node-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:node-not-found-error :uri uri))))
 
 (def-neo4j-fun create-index ((type :node) name config)
   :post
@@ -206,7 +206,7 @@
   (:uri-spec (format nil "index/~A/~A" (string-downcase (symbol-name type)) name))
   (:status-handlers
    (204 (values t body))
-   (404 (error 'index-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:index-not-found-error :uri uri))))
 
 (def-neo4j-fun list-indexes ((type :node))
   :get
@@ -269,7 +269,7 @@
            :string)
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (404 (error 'node-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:node-not-found-error :uri uri))))
 
 (def-neo4j-fun get-path (node-id to-node-id relationships (max-depth 3) (algorithm :shortest-path))
   :post
@@ -285,7 +285,7 @@
            :object)
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (404 (error 'path-not-found-error :uri uri))))
+   (404 (error 'cl-neo4j.utils:path-not-found-error :uri uri))))
 
 (def-neo4j-fun get-paths (node-id to-node-id relationships (max-depth 3) (algorithm :shortest-path))
   :post
@@ -301,4 +301,4 @@
            :object)
   (:status-handlers
    (200 (decode-neo4j-json-output body))
-   (204 (error 'path-not-found-error :uri uri))))
+   (204 (error 'cl-neo4j.utils:path-not-found-error :uri uri))))
