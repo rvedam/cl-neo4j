@@ -1,4 +1,4 @@
-(in-package #:cl-neo4j)
+(in-package #:cl-neo4j.utils)
 
 (defun format-neo4j-query (host port resource &key (db-postfix "db/data/"))
   (format nil "http://~A:~A/~A~A" host port db-postfix resource))
